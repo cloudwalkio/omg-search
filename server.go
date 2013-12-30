@@ -54,6 +54,7 @@ func (this *IRExtender) Visit(ctx *gocrawl.URLContext, res *http.Response, doc *
         // Add the html page to the engine. The ID is url, the text is body
         this.Data.Engine.AddDocument(url, body)
 
+        // Get the page description
         desc, find := doc.Find("meta[name=\"docs:description\"]").Attr("content")
         if !find {
             fmt.Printf("[%s] meta[name=\"docs:description\"] not found: %s\n", url, find)
@@ -75,8 +76,6 @@ func (this *IRExtender) Filter(ctx *gocrawl.URLContext, isVisited bool) bool {
 // Run the crawler, starting at root_url.
 // Return an Information Retrieval Engine that uses the crawled documents.
 func Crawl(crawler_data *CrawlerData) {
-
-
         // Create a new Extender with the above engine and regex
         ext := IRExtender{Data:crawler_data}
         
@@ -84,7 +83,7 @@ func Crawl(crawler_data *CrawlerData) {
         opts := gocrawl.NewOptions(&ext)
         opts.CrawlDelay = 0 * time.Second
         opts.LogFlags = gocrawl.LogInfo
-        opts.MaxVisits = 2
+        opts.MaxVisits = 500 // Will halt before that, after visiting all pages
 
         // Create a new crawler with the above Options
         c := gocrawl.NewCrawlerWithOptions(opts)
@@ -96,11 +95,6 @@ func Crawl(crawler_data *CrawlerData) {
         crawler_data.Engine.Vectorize()
 }
 
-// Rerun the crawler to recalculate the engine vectorization
-func Reindex(crawler_data *CrawlerData) {
-    Crawl(crawler_data)
-}
-
 func main() {
 
     m := martini.Classic()
@@ -108,24 +102,24 @@ func main() {
     crawler_en := CrawlerData{Engine:ir.NewEngine(), Description:make(map[string] string), filter:regexp.MustCompile(`http(s*)://docs\.cloudwalk\.io/en(.*)`), domain:regexp.MustCompile(`.*(en)`), root_url:"https://docs.cloudwalk.io/en/introduction"}
     crawler_pt_br := CrawlerData{Engine:ir.NewEngine(), Description:make(map[string] string), filter:regexp.MustCompile(`http(s*)://docs\.cloudwalk\.io/pt-BR(.*)`), domain:regexp.MustCompile(`.*(pt-BR)`), root_url:"https://docs.cloudwalk.io/pt-BR/introduction"}
 
-    // Index the engines
-    go Reindex(&crawler_en)
-    go Reindex(&crawler_pt_br)
+    // Crawl and populate the information retrieval engines
+    go Crawl(&crawler_en)
+    go Crawl(&crawler_pt_br)
 
     // Update the engines crawling again
-    m.Get("/reindex", func() {
-    go Reindex(&crawler_en)
-    go Reindex(&crawler_pt_br)
+    m.Get("/crawl", func() {
+    go Crawl(&crawler_en)
+    go Crawl(&crawler_pt_br)
     })
 
     // Update the english engine
-    m.Get("/reindex/en", func() {
-        go Reindex(&crawler_en)
+    m.Get("/crawl/en", func() {
+        go Crawl(&crawler_en)
     })
 
     // Update the pt engine
-    m.Get("/reindex/pt-BR", func() {
-        go Reindex(&crawler_pt_br)
+    m.Get("/crawl/pt-BR", func() {
+        go Crawl(&crawler_pt_br)
     })
 
     // Return a Json of the engines
