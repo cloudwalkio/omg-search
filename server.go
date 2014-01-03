@@ -108,8 +108,8 @@ func main() {
 
     // Update the engines crawling again
     m.Get("/crawl", func() {
-    go Crawl(&crawler_en)
-    go Crawl(&crawler_pt_br)
+        go Crawl(&crawler_en)
+        go Crawl(&crawler_pt_br)
     })
 
     // Update the english engine
@@ -143,7 +143,8 @@ func main() {
     // Do a search: /en?query=searching+for+this
     m.Get("/:search", func(params martini.Params, w http.ResponseWriter, req *http.Request) string  {
         w.Header().Set("Content-Type", "application/json")
-
+        w.Header().Set("Access-Control-Allow-Origin", "*")
+        
         s := make([]SearchResult, 0)
         
         // Parse the url to get the query paramenter named "query" and convert to int
