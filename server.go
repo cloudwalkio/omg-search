@@ -107,18 +107,21 @@ func main() {
     go Crawl(&crawler_pt_br)
 
     // Update the engines crawling again
-    m.Get("/crawl", func() {
+    m.Get("/crawl", func(w http.ResponseWriter) {
+        w.Header().Set("Access-Control-Allow-Origin", "*")
         go Crawl(&crawler_en)
         go Crawl(&crawler_pt_br)
     })
 
     // Update the english engine
-    m.Get("/crawl/en", func() {
+    m.Get("/crawl/en", func(w http.ResponseWriter) {
+        w.Header().Set("Access-Control-Allow-Origin", "*")
         go Crawl(&crawler_en)
     })
 
     // Update the pt engine
-    m.Get("/crawl/pt-BR", func() {
+    m.Get("/crawl/pt-BR", func(w http.ResponseWriter) {
+        w.Header().Set("Access-Control-Allow-Origin", "*")
         go Crawl(&crawler_pt_br)
     })
 
