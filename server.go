@@ -105,8 +105,8 @@ func main() {
 
     m := martini.Classic()
 
-    crawler_en := CrawlerData{Engine:ir.NewEngine(), Title:make(map[string] string), Description:make(map[string] string), filter:regexp.MustCompile(`http(s*)://docs\.cloudwalk\.io/en(.*)`), domain:regexp.MustCompile(`.*(en)`), root_url:"https://docs.cloudwalk.io/en/introduction"}
-    crawler_pt_br := CrawlerData{Engine:ir.NewEngine(), Title:make(map[string] string), Description:make(map[string] string), filter:regexp.MustCompile(`http(s*)://docs\.cloudwalk\.io/pt-BR(.*)`), domain:regexp.MustCompile(`.*(pt-BR)`), root_url:"https://docs.cloudwalk.io/pt-BR/introduction"}
+    crawler_en := CrawlerData{Engine:ir.NewEngine(), Title:make(map[string] string), Description:make(map[string] string), filter:regexp.MustCompile(`http(s*)://docs\.cloudwalk\.io/en(.*)`), domain:regexp.MustCompile(`.*(docs.cloudwalk.io/en)`), root_url:"https://docs.cloudwalk.io/en/introduction"}
+    crawler_pt_br := CrawlerData{Engine:ir.NewEngine(), Title:make(map[string] string), Description:make(map[string] string), filter:regexp.MustCompile(`http(s*)://docs\.cloudwalk\.io/pt-BR(.*)`), domain:regexp.MustCompile(`.*(docs.cloudwalk.io/pt-BR)`), root_url:"https://docs.cloudwalk.io/pt-BR/introduction"}
 
     // Crawl and populate the information retrieval engines
     go Crawl(&crawler_en)
