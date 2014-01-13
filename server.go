@@ -19,13 +19,15 @@ type Search struct {
 
 type SearchResult struct {
     Url string          `json:"url"`
+    Title string  `json:"title"`
     Description string  `json:"description"`
 }
 
 // Used to aggregate structures to the crawler
 type CrawlerData struct {
     Engine *ir.Engine // The Information Retrieval Engine
-    Description map[string] string 
+    Description map[string] string
+    Title map[string] string
     filter *regexp.Regexp // Filtering regex
     domain *regexp.Regexp // String to remove from maps
     root_url string
@@ -45,7 +47,7 @@ func (this *IRExtender) Visit(ctx *gocrawl.URLContext, res *http.Response, doc *
 
         // This is Cloudwalk specific: the div<class="span9"> contains the main content of each page 
         body, err := doc.Find("div[class=\"span9\"]").Html()
-
+    
         if err != nil {
             fmt.Printf("[%s] div[class=\"span9\"] not found: %s\n", url, err)
             return nil, false
@@ -63,6 +65,10 @@ func (this *IRExtender) Visit(ctx *gocrawl.URLContext, res *http.Response, doc *
 
         // Add the description to the map
         this.Data.Description[url] = desc
+
+        // Add the title to the map
+        title, _ := doc.Find("div[class=\"span9\"]").Find("h1").Html()
+        this.Data.Title[url] = title
 
         // Return nil and true - let gocrawl find the links
         return nil, true
@@ -99,8 +105,8 @@ func main() {
 
     m := martini.Classic()
 
-    crawler_en := CrawlerData{Engine:ir.NewEngine(), Description:make(map[string] string), filter:regexp.MustCompile(`http(s*)://docs\.cloudwalk\.io/en(.*)`), domain:regexp.MustCompile(`.*(en)`), root_url:"https://docs.cloudwalk.io/en/introduction"}
-    crawler_pt_br := CrawlerData{Engine:ir.NewEngine(), Description:make(map[string] string), filter:regexp.MustCompile(`http(s*)://docs\.cloudwalk\.io/pt-BR(.*)`), domain:regexp.MustCompile(`.*(pt-BR)`), root_url:"https://docs.cloudwalk.io/pt-BR/introduction"}
+    crawler_en := CrawlerData{Engine:ir.NewEngine(), Title:make(map[string] string), Description:make(map[string] string), filter:regexp.MustCompile(`http(s*)://docs\.cloudwalk\.io/en(.*)`), domain:regexp.MustCompile(`.*(en)`), root_url:"https://docs.cloudwalk.io/en/introduction"}
+    crawler_pt_br := CrawlerData{Engine:ir.NewEngine(), Title:make(map[string] string), Description:make(map[string] string), filter:regexp.MustCompile(`http(s*)://docs\.cloudwalk\.io/pt-BR(.*)`), domain:regexp.MustCompile(`.*(pt-BR)`), root_url:"https://docs.cloudwalk.io/pt-BR/introduction"}
 
     // Crawl and populate the information retrieval engines
     go Crawl(&crawler_en)
@@ -155,12 +161,12 @@ func main() {
 
         if params["search"] == "en" {
             for _, v := range crawler_en.Engine.Query(query) {
-                s = append(s, SearchResult{Url:v.Id, Description:crawler_en.Description[v.Id]})
+                s = append(s, SearchResult{Url:v.Id, Title:crawler_en.Title[v.Id], Description:crawler_en.Description[v.Id]})
             }
         } else {
             if params["search"] == "pt-BR" {
                 for _, v := range crawler_pt_br.Engine.Query(query) {
-                   s = append(s, SearchResult{Url:v.Id, Description:crawler_pt_br.Description[v.Id]})
+                   s = append(s, SearchResult{Url:v.Id, Title:crawler_pt_br.Title[v.Id], Description:crawler_pt_br.Description[v.Id]})
                 }
             } 
         }
