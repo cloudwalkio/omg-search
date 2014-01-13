@@ -14,12 +14,12 @@ import (
 
 // Structures to keep the search results
 type Search struct {
-    Results []SearchResult
+    Results []SearchResult `json:"results"`
 }
 
 type SearchResult struct {
-    Url string
-    Description string
+    Url string          `json:"url"`
+    Description string  `json:"description"`
 }
 
 // Used to aggregate structures to the crawler
