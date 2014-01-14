@@ -13,7 +13,7 @@ import (
     "flag"
 )
 
-var token = flag.String("token", "", "Access-token that must be validated.")
+var token = flag.String("token", "", "access_token that must be validated.")
 
 // Structures to keep the search results
 type Search struct {
@@ -124,7 +124,7 @@ func main() {
         w.Header().Set("Access-Control-Allow-Origin", "*")
 
         // Get the access token
-        access_token := req.URL.Query().Get("access-token")
+        access_token := req.URL.Query().Get("access_token")
         if access_token != *token {
             b,_ := json.MarshalIndent(MessageReturn{"Not authorized"}, "", "  ")
             return http.StatusUnauthorized , string(b) 
@@ -142,7 +142,7 @@ func main() {
         w.Header().Set("Access-Control-Allow-Origin", "*")
 
         // Get the access token
-        access_token := req.URL.Query().Get("access-token")
+        access_token := req.URL.Query().Get("access_token")
         if access_token != *token {
             b,_ := json.MarshalIndent(MessageReturn{"Not authorized"}, "", "  ")
             return http.StatusUnauthorized , string(b) 
@@ -159,7 +159,7 @@ func main() {
         w.Header().Set("Access-Control-Allow-Origin", "*")
 
         // Get the access token
-        access_token := req.URL.Query().Get("access-token")
+        access_token := req.URL.Query().Get("access_token")
         if access_token != *token {
             b,_ := json.MarshalIndent(MessageReturn{"Not authorized"}, "", "  ")
             return http.StatusUnauthorized , string(b) 
@@ -176,7 +176,7 @@ func main() {
         w.Header().Set("Content-Type", "application/json")
 
         // Get the access token
-        access_token := req.URL.Query().Get("access-token")
+        access_token := req.URL.Query().Get("access_token")
         if access_token != *token {
             b,_ := json.MarshalIndent(MessageReturn{"Not authorized"}, "", "  ")
             return http.StatusUnauthorized , string(b) 
@@ -189,7 +189,7 @@ func main() {
         w.Header().Set("Content-Type", "application/json")
 
         // Get the access token
-        access_token := req.URL.Query().Get("access-token")
+        access_token := req.URL.Query().Get("access_token")
         if access_token != *token {
             b,_ := json.MarshalIndent(MessageReturn{"Not authorized"}, "", "  ")
             return http.StatusUnauthorized , string(b) 
@@ -203,7 +203,7 @@ func main() {
         w.Header().Set("Content-Type", "application/json")
 
         // Get the access token
-        access_token := req.URL.Query().Get("access-token")
+        access_token := req.URL.Query().Get("access_token")
         if access_token != *token {
             b,_ := json.MarshalIndent(MessageReturn{"Not authorized"}, "", "  ")
             return http.StatusUnauthorized , string(b) 
@@ -223,7 +223,7 @@ func main() {
         query := req.URL.Query().Get("query")
 
         // Get the access token
-        access_token := req.URL.Query().Get("access-token")
+        access_token := req.URL.Query().Get("access_token")
 
         if access_token != *token {
             b,_ := json.MarshalIndent(MessageReturn{"Not authorized"}, "", "  ")
