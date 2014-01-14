@@ -8,7 +8,7 @@ Usage
 
 In starting the server we must pass a token that will be used to authorization in any requests to the API: 
 ```
-docker run -d allanino/search "my_token"
+docker run -d -p 80:5000 allanino/search -token "my_token"
 ```
 
 The API accepts the following GET requests:
