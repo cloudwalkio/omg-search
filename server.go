@@ -10,7 +10,10 @@ import (
     "time"
     "regexp"
     "encoding/json"
+    "flag"
 )
+
+var token = flag.String("token", "", "Access-token that must be validated.")
 
 // Structures to keep the search results
 type Search struct {
@@ -19,7 +22,7 @@ type Search struct {
 
 type SearchResult struct {
     Url string          `json:"url"`
-    Title string  `json:"title"`
+    Title string        `json:"title"`
     Description string  `json:"description"`
 }
 
@@ -33,6 +36,9 @@ type CrawlerData struct {
     root_url string
 }
 
+type MessageReturn struct {
+    Message string `json:"message"`
+}
 // Create the Extender implementation, based on the gocrawl-provided DefaultExtender,
 // because we don't want/need to override all methods.
 type IRExtender struct {
@@ -102,7 +108,8 @@ func Crawl(crawler_data *CrawlerData) {
 }
 
 func main() {
-
+    flag.Parse()
+    fmt.Printf(*token)
     m := martini.Classic()
 
     crawler_en := CrawlerData{Engine:ir.NewEngine(), Title:make(map[string] string), Description:make(map[string] string), filter:regexp.MustCompile(`http(s*)://docs\.cloudwalk\.io/en(.*)`), domain:regexp.MustCompile(`.*(docs.cloudwalk.io/en)`), root_url:"https://docs.cloudwalk.io/en/introduction"}
@@ -113,44 +120,100 @@ func main() {
     go Crawl(&crawler_pt_br)
 
     // Update the engines crawling again
-    m.Get("/crawl", func(w http.ResponseWriter) {
+    m.Get("/crawl", func(w http.ResponseWriter, req *http.Request) (int,string) {
         w.Header().Set("Access-Control-Allow-Origin", "*")
+
+        // Get the access token
+        access_token := req.URL.Query().Get("access-token")
+        if access_token != *token {
+            b,_ := json.MarshalIndent(MessageReturn{"Not authorized"}, "", "  ")
+            return http.StatusUnauthorized , string(b) 
+        }
+
         go Crawl(&crawler_en)
         go Crawl(&crawler_pt_br)
+
+        b,_ := json.MarshalIndent(MessageReturn{"Crawling web pages"}, "", "  ")
+        return http.StatusOK, string(b) 
     })
 
     // Update the english engine
-    m.Get("/crawl/en", func(w http.ResponseWriter) {
+    m.Get("/crawl/en", func(w http.ResponseWriter, req *http.Request) (int, string) {
         w.Header().Set("Access-Control-Allow-Origin", "*")
+
+        // Get the access token
+        access_token := req.URL.Query().Get("access-token")
+        if access_token != *token {
+            b,_ := json.MarshalIndent(MessageReturn{"Not authorized"}, "", "  ")
+            return http.StatusUnauthorized , string(b) 
+        }
+
         go Crawl(&crawler_en)
+
+        b,_ := json.MarshalIndent(MessageReturn{"Crawling web pages"}, "", "  ")
+        return http.StatusOK, string(b) 
     })
 
     // Update the pt engine
-    m.Get("/crawl/pt-BR", func(w http.ResponseWriter) {
+    m.Get("/crawl/pt-BR", func(w http.ResponseWriter, req *http.Request) (int, string) {
         w.Header().Set("Access-Control-Allow-Origin", "*")
+
+        // Get the access token
+        access_token := req.URL.Query().Get("access-token")
+        if access_token != *token {
+            b,_ := json.MarshalIndent(MessageReturn{"Not authorized"}, "", "  ")
+            return http.StatusUnauthorized , string(b) 
+        }
+
         go Crawl(&crawler_pt_br)
+
+        b,_ := json.MarshalIndent(MessageReturn{"Crawling web pages"}, "", "  ")
+        return http.StatusOK, string(b) 
     })
 
     // Return a Json of the engines
-    m.Get("/engine", func(w http.ResponseWriter) string {
+    m.Get("/engine", func(w http.ResponseWriter, req *http.Request) (int, string) {
         w.Header().Set("Content-Type", "application/json")
-        return "[\n" + string(crawler_pt_br.Engine.Json()) + ",\n" + string(crawler_en.Engine.Json()) + "\n]"
+
+        // Get the access token
+        access_token := req.URL.Query().Get("access-token")
+        if access_token != *token {
+            b,_ := json.MarshalIndent(MessageReturn{"Not authorized"}, "", "  ")
+            return http.StatusUnauthorized , string(b) 
+        }
+
+        return http.StatusOK, "[\n" + string(crawler_pt_br.Engine.Json()) + ",\n" + string(crawler_en.Engine.Json()) + "\n]"
     })
     // Return a Json of the pt engine
-    m.Get("/engine/pt-BR", func(w http.ResponseWriter) string {
+    m.Get("/engine/pt-BR", func(w http.ResponseWriter, req *http.Request) (int, string) {
         w.Header().Set("Content-Type", "application/json")
-        return string(crawler_pt_br.Engine.Json())
+
+        // Get the access token
+        access_token := req.URL.Query().Get("access-token")
+        if access_token != *token {
+            b,_ := json.MarshalIndent(MessageReturn{"Not authorized"}, "", "  ")
+            return http.StatusUnauthorized , string(b) 
+        }
+
+        return http.StatusOK, string(crawler_pt_br.Engine.Json())
     })
 
     // Return a Json of the en engine
-    m.Get("/engine/en", func(w http.ResponseWriter) string {
+    m.Get("/engine/en", func(w http.ResponseWriter, req *http.Request) (int, string) {
         w.Header().Set("Content-Type", "application/json")
-        return string(crawler_en.Engine.Json())
+
+        // Get the access token
+        access_token := req.URL.Query().Get("access-token")
+        if access_token != *token {
+            b,_ := json.MarshalIndent(MessageReturn{"Not authorized"}, "", "  ")
+            return http.StatusUnauthorized , string(b) 
+        }
+
+        return http.StatusOK, string(crawler_en.Engine.Json())
     })
 
-
     // Do a search: /en?query=searching+for+this
-    m.Get("/:search", func(params martini.Params, w http.ResponseWriter, req *http.Request) string  {
+    m.Get("/:search", func(params martini.Params, w http.ResponseWriter, req *http.Request) (int, string)  {
         w.Header().Set("Content-Type", "application/json")
         w.Header().Set("Access-Control-Allow-Origin", "*")
         
@@ -158,6 +221,14 @@ func main() {
         
         // Parse the url to get the query paramenter named "query" and convert to int
         query := req.URL.Query().Get("query")
+
+        // Get the access token
+        access_token := req.URL.Query().Get("access-token")
+
+        if access_token != *token {
+            b,_ := json.MarshalIndent(MessageReturn{"Not authorized"}, "", "  ")
+            return http.StatusUnauthorized , string(b) 
+        }
 
         if params["search"] == "en" {
             for _, v := range crawler_en.Engine.Query(query) {
@@ -171,7 +242,7 @@ func main() {
             } 
         }
         b,_ := json.MarshalIndent(Search{s}, "", "  ")
-        return string(b)
+        return http.StatusOK, string(b)
     })
 
     fmt.Printf("[martini] Listening on port 5000\n")
