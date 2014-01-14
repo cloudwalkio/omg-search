@@ -6,6 +6,11 @@ We use [gocrawl] to crawl our documentation pages and our [go-ir] package to cre
 Usage
 -----
 
+To start the server:
+```
+docker run -d allanino/search
+```
+
 The API accepts the following GET requests:
 
   * `/en?query=search+me`: search for "search me" in the english documentation.
