@@ -120,11 +120,11 @@ func main() {
     go Crawl(&crawler_pt_br)
 
     // Update the engines crawling again
-    m.Get("/crawl", func(w http.ResponseWriter, req *http.Request) (int,string) {
+    m.Post("/crawl", func(w http.ResponseWriter, req *http.Request) (int,string) {
         w.Header().Set("Access-Control-Allow-Origin", "*")
 
         // Get the access token
-        access_token := req.URL.Query().Get("access_token")
+        access_token := req.FormValue("access_token")
         if access_token != *token {
             b,_ := json.MarshalIndent(MessageReturn{"Not authorized"}, "", "  ")
             return http.StatusUnauthorized , string(b) 
@@ -138,11 +138,11 @@ func main() {
     })
 
     // Update the english engine
-    m.Get("/crawl/en", func(w http.ResponseWriter, req *http.Request) (int, string) {
+    m.Post("/crawl/en", func(w http.ResponseWriter, req *http.Request) (int, string) {
         w.Header().Set("Access-Control-Allow-Origin", "*")
 
         // Get the access token
-        access_token := req.URL.Query().Get("access_token")
+        access_token := req.FormValue("access_token")
         if access_token != *token {
             b,_ := json.MarshalIndent(MessageReturn{"Not authorized"}, "", "  ")
             return http.StatusUnauthorized , string(b) 
@@ -155,11 +155,11 @@ func main() {
     })
 
     // Update the pt engine
-    m.Get("/crawl/pt-BR", func(w http.ResponseWriter, req *http.Request) (int, string) {
+    m.Post("/crawl/pt-BR", func(w http.ResponseWriter, req *http.Request) (int, string) {
         w.Header().Set("Access-Control-Allow-Origin", "*")
 
         // Get the access token
-        access_token := req.URL.Query().Get("access_token")
+        access_token := req.FormValue("access_token")
         if access_token != *token {
             b,_ := json.MarshalIndent(MessageReturn{"Not authorized"}, "", "  ")
             return http.StatusUnauthorized , string(b) 

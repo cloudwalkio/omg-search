@@ -15,6 +15,9 @@ The API accepts the following GET requests:
 
   * `/en?query=search+me&access_token=my_token`: search for "search me" in the english documentation.
   * `/pt-BR?query=pesquise+me&access_token=my_token`: search for "pesquise-me" in the portuguese documentation.
+ 
+The API accepts the following POST requests:
+
   * `/crawl?access_token=my_token`: recrawl the english and portugues pages and update the Information Retrieval engine.
     * `/crawl/en?access_token=my_token`: recrawl only the english pages and update the Information Retrieval engine.
     * `/crawl/pt-BR?access_token=my_token`: recrawl only the portuguese pages and update the Information Retrieval engine.
