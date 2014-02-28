@@ -109,7 +109,7 @@ func Crawl(crawler_data *CrawlerData) {
 
 func main() {
     flag.Parse()
-    fmt.Printf(*token)
+
     m := martini.Classic()
 
     crawler_en := CrawlerData{Engine:ir.NewEngine(), Title:make(map[string] string), Description:make(map[string] string), filter:regexp.MustCompile(`http(s*)://docs\.cloudwalk\.io/en(.*)`), domain:regexp.MustCompile(`.*(docs.cloudwalk.io/en)`), root_url:"https://docs.cloudwalk.io/en/introduction"}
@@ -130,8 +130,16 @@ func main() {
             return http.StatusUnauthorized , string(b) 
         }
 
-        go Crawl(&crawler_en)
-        go Crawl(&crawler_pt_br)
+        // Auxiliaries crawlers
+        crawler_en_aux := CrawlerData{Engine:ir.NewEngine(), Title:make(map[string] string), Description:make(map[string] string), filter:regexp.MustCompile(`http(s*)://docs\.cloudwalk\.io/en(.*)`), domain:regexp.MustCompile(`.*(docs.cloudwalk.io/en)`), root_url:"https://docs.cloudwalk.io/en/introduction"}
+        crawler_pt_br_aux := CrawlerData{Engine:ir.NewEngine(), Title:make(map[string] string), Description:make(map[string] string), filter:regexp.MustCompile(`http(s*)://docs\.cloudwalk\.io/pt-BR(.*)`), domain:regexp.MustCompile(`.*(docs.cloudwalk.io/pt-BR)`), root_url:"https://docs.cloudwalk.io/pt-BR/introduction"}
+
+        go Crawl(&crawler_en_aux)
+        go Crawl(&crawler_pt_br_aux)
+
+        // Copy the new crawlers to the global crawlers
+        crawler_en = crawler_en_aux
+        crawler_pt_br = crawler_pt_br_aux
 
         b,_ := json.MarshalIndent(MessageReturn{"Crawling web pages"}, "", "  ")
         return http.StatusOK, string(b) 
@@ -148,7 +156,9 @@ func main() {
             return http.StatusUnauthorized , string(b) 
         }
 
-        go Crawl(&crawler_en)
+        crawler_en_aux := CrawlerData{Engine:ir.NewEngine(), Title:make(map[string] string), Description:make(map[string] string), filter:regexp.MustCompile(`http(s*)://docs\.cloudwalk\.io/en(.*)`), domain:regexp.MustCompile(`.*(docs.cloudwalk.io/en)`), root_url:"https://docs.cloudwalk.io/en/introduction"}
+        go Crawl(&crawler_en_aux)
+        crawler_en = crawler_en_aux
 
         b,_ := json.MarshalIndent(MessageReturn{"Crawling web pages"}, "", "  ")
         return http.StatusOK, string(b) 
@@ -165,7 +175,9 @@ func main() {
             return http.StatusUnauthorized , string(b) 
         }
 
-        go Crawl(&crawler_pt_br)
+        crawler_pt_br_aux := CrawlerData{Engine:ir.NewEngine(), Title:make(map[string] string), Description:make(map[string] string), filter:regexp.MustCompile(`http(s*)://docs\.cloudwalk\.io/pt-BR(.*)`), domain:regexp.MustCompile(`.*(docs.cloudwalk.io/pt-BR)`), root_url:"https://docs.cloudwalk.io/pt-BR/introduction"}
+        go Crawl(&crawler_pt_br_aux)
+        crawler_pt_br = crawler_pt_br_aux
 
         b,_ := json.MarshalIndent(MessageReturn{"Crawling web pages"}, "", "  ")
         return http.StatusOK, string(b) 
