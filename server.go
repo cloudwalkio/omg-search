@@ -112,8 +112,8 @@ func main() {
 
     m := martini.Classic()
 
-    crawler_en := CrawlerData{Engine:ir.NewEngine(), Title:make(map[string] string), Description:make(map[string] string), filter:regexp.MustCompile(`http(s*)://docs\.cloudwalk\.io/en(.*)`), domain:regexp.MustCompile(`.*(docs.cloudwalk.io/en)`), root_url:"https://docs.cloudwalk.io/en/introduction"}
-    crawler_pt_br := CrawlerData{Engine:ir.NewEngine(), Title:make(map[string] string), Description:make(map[string] string), filter:regexp.MustCompile(`http(s*)://docs\.cloudwalk\.io/pt-BR(.*)`), domain:regexp.MustCompile(`.*(docs.cloudwalk.io/pt-BR)`), root_url:"https://docs.cloudwalk.io/pt-BR/introduction"}
+    crawler_en := CrawlerData{Engine:ir.NewEngine("en"), Title:make(map[string] string), Description:make(map[string] string), filter:regexp.MustCompile(`http(s*)://docs\.cloudwalk\.io/en(.*)`), domain:regexp.MustCompile(`.*(docs.cloudwalk.io/en)`), root_url:"https://docs.cloudwalk.io/en/introduction"}
+    crawler_pt_br := CrawlerData{Engine:ir.NewEngine("pt"), Title:make(map[string] string), Description:make(map[string] string), filter:regexp.MustCompile(`http(s*)://docs\.cloudwalk\.io/pt-BR(.*)`), domain:regexp.MustCompile(`.*(docs.cloudwalk.io/pt-BR)`), root_url:"https://docs.cloudwalk.io/pt-BR/introduction"}
 
     // Crawl and populate the information retrieval engines
     go Crawl(&crawler_en)
@@ -131,8 +131,8 @@ func main() {
         }
 
         // Auxiliaries crawlers
-        crawler_en_aux := CrawlerData{Engine:ir.NewEngine(), Title:make(map[string] string), Description:make(map[string] string), filter:regexp.MustCompile(`http(s*)://docs\.cloudwalk\.io/en(.*)`), domain:regexp.MustCompile(`.*(docs.cloudwalk.io/en)`), root_url:"https://docs.cloudwalk.io/en/introduction"}
-        crawler_pt_br_aux := CrawlerData{Engine:ir.NewEngine(), Title:make(map[string] string), Description:make(map[string] string), filter:regexp.MustCompile(`http(s*)://docs\.cloudwalk\.io/pt-BR(.*)`), domain:regexp.MustCompile(`.*(docs.cloudwalk.io/pt-BR)`), root_url:"https://docs.cloudwalk.io/pt-BR/introduction"}
+        crawler_en_aux := CrawlerData{Engine:ir.NewEngine("en"), Title:make(map[string] string), Description:make(map[string] string), filter:regexp.MustCompile(`http(s*)://docs\.cloudwalk\.io/en(.*)`), domain:regexp.MustCompile(`.*(docs.cloudwalk.io/en)`), root_url:"https://docs.cloudwalk.io/en/introduction"}
+        crawler_pt_br_aux := CrawlerData{Engine:ir.NewEngine("pt"), Title:make(map[string] string), Description:make(map[string] string), filter:regexp.MustCompile(`http(s*)://docs\.cloudwalk\.io/pt-BR(.*)`), domain:regexp.MustCompile(`.*(docs.cloudwalk.io/pt-BR)`), root_url:"https://docs.cloudwalk.io/pt-BR/introduction"}
 
         go Crawl(&crawler_en_aux)
         go Crawl(&crawler_pt_br_aux)
@@ -156,7 +156,7 @@ func main() {
             return http.StatusUnauthorized , string(b) 
         }
 
-        crawler_en_aux := CrawlerData{Engine:ir.NewEngine(), Title:make(map[string] string), Description:make(map[string] string), filter:regexp.MustCompile(`http(s*)://docs\.cloudwalk\.io/en(.*)`), domain:regexp.MustCompile(`.*(docs.cloudwalk.io/en)`), root_url:"https://docs.cloudwalk.io/en/introduction"}
+        crawler_en_aux := CrawlerData{Engine:ir.NewEngine("en"), Title:make(map[string] string), Description:make(map[string] string), filter:regexp.MustCompile(`http(s*)://docs\.cloudwalk\.io/en(.*)`), domain:regexp.MustCompile(`.*(docs.cloudwalk.io/en)`), root_url:"https://docs.cloudwalk.io/en/introduction"}
         go Crawl(&crawler_en_aux)
         crawler_en = crawler_en_aux
 
@@ -175,7 +175,7 @@ func main() {
             return http.StatusUnauthorized , string(b) 
         }
 
-        crawler_pt_br_aux := CrawlerData{Engine:ir.NewEngine(), Title:make(map[string] string), Description:make(map[string] string), filter:regexp.MustCompile(`http(s*)://docs\.cloudwalk\.io/pt-BR(.*)`), domain:regexp.MustCompile(`.*(docs.cloudwalk.io/pt-BR)`), root_url:"https://docs.cloudwalk.io/pt-BR/introduction"}
+        crawler_pt_br_aux := CrawlerData{Engine:ir.NewEngine("pt"), Title:make(map[string] string), Description:make(map[string] string), filter:regexp.MustCompile(`http(s*)://docs\.cloudwalk\.io/pt-BR(.*)`), domain:regexp.MustCompile(`.*(docs.cloudwalk.io/pt-BR)`), root_url:"https://docs.cloudwalk.io/pt-BR/introduction"}
         go Crawl(&crawler_pt_br_aux)
         crawler_pt_br = crawler_pt_br_aux
 
