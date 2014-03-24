@@ -1,7 +1,7 @@
 omg-search
 ==========
 
-We use [gocrawl] to crawl our documentation pages and our [go-ir] package to create a Information Retrieval system, aka, a search system.
+We use [gocrawl] to crawl our documentation pages and our [go-ir] package to create an Information Retrieval system, aka, a search system.
 
 Usage
 -----
