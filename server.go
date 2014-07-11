@@ -4,7 +4,7 @@ import (
     "github.com/codegangsta/martini"
     "github.com/PuerkitoBio/gocrawl"
     "github.com/PuerkitoBio/goquery"
-    "github.com/allanino/go-ir"
+    "github.com/cloudwalkio/go-ir"
     "net/http"
     "fmt"
     "time"
