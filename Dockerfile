@@ -1,5 +1,7 @@
 FROM luisbebop/go1.2
 
+MANTAINER Allan Costa <allan@cloudwalk.io>
+
 RUN \
     go get github.com/codegangsta/martini;\
     go get github.com/PuerkitoBio/gocrawl;\
