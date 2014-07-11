@@ -8,7 +8,7 @@ Usage
 
 In starting the server we must pass a token that will be used to authorization in any requests to the API: 
 ```
-docker run -d -p 80:5000 allanino/search "my_token"
+docker run -d -p 80:5000 cloudwalk/search "my_token"
 ```
 
 The API accepts the following GET requests:
@@ -27,7 +27,7 @@ Logs
 
 The server logs are saved to `LOG_DIR` environment variable, which defaults to `/var/log/docker/search`. To access it from the host, outise the container, we can mount a host directory to LOG_DIR when starting the container, using flag `-v`:
 ```
-docker run -d -v /path/to/host/log/dir:/var/log/docker/search -p 80:5000 allanino/search "my_token"
+docker run -d -v /path/to/host/log/dir:/var/log/docker/search -p 80:5000 cloudwalk/search "my_token"
 ```
 
 An alternative is to mount the volume from another container, using the `--volumes-from` flag.
