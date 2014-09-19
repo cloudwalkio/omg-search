@@ -1,6 +1,8 @@
 omg-search
 ==========
 
+[![Docker build](http://dockeri.co/image/cloudwalk/search)](https://registry.hub.docker.com/u/cloudwalk/search/)
+
 We use [gocrawl] to crawl our documentation pages and our [go-ir] package to create an Information Retrieval system, aka, a search system.
 
 Usage
