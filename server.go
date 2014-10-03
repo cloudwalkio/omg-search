@@ -134,9 +134,11 @@ func main() {
             return http.StatusUnauthorized , string(b) 
         }
 
+        pattern_to_remove := regexp.MustCompile("[^\\w\\d\\.\\-\\xE0\\xE1\\xE2\\xE3\\xE4\\xE5\\xE6\\xE7\\xE8\\xE9\\xEA\\xEB\\xEC\\xED\\xEE\\xEF\\xF0\\xF1\\xF2\\xF3\\xF4\\xF5\\xF6\\xF7\\xF8\\xF9\\xFA\\xFB\\xFC\\xFD\\xFE\\xFF]")
+
         // Auxiliaries crawlers
-        crawler_en_aux := CrawlerData{Engine:ir.NewEngine("en"), Title:make(map[string] string), Description:make(map[string] string), filter:regexp.MustCompile(`http(s*)://docs\.cloudwalk\.io/en(.*)`), domain:regexp.MustCompile(`.*(docs.cloudwalk.io/en)`), root_url:"https://docs.cloudwalk.io/en/introduction"}
-        crawler_pt_br_aux := CrawlerData{Engine:ir.NewEngine("pt"), Title:make(map[string] string), Description:make(map[string] string), filter:regexp.MustCompile(`http(s*)://docs\.cloudwalk\.io/pt-BR(.*)`), domain:regexp.MustCompile(`.*(docs.cloudwalk.io/pt-BR)`), root_url:"https://docs.cloudwalk.io/pt-BR/introduction"}
+        crawler_en_aux := CrawlerData{Engine:ir.NewEngine("en", pattern_to_remove), Title:make(map[string] string), Description:make(map[string] string), filter:regexp.MustCompile(`http(s*)://docs\.cloudwalk\.io/en(.*)`), domain:regexp.MustCompile(`.*(docs.cloudwalk.io/en)`), root_url:"https://docs.cloudwalk.io/en/introduction"}
+        crawler_pt_br_aux := CrawlerData{Engine:ir.NewEngine("pt", pattern_to_remove), Title:make(map[string] string), Description:make(map[string] string), filter:regexp.MustCompile(`http(s*)://docs\.cloudwalk\.io/pt-BR(.*)`), domain:regexp.MustCompile(`.*(docs.cloudwalk.io/pt-BR)`), root_url:"https://docs.cloudwalk.io/pt-BR/introduction"}
 
         go Crawl(&crawler_en_aux)
         go Crawl(&crawler_pt_br_aux)
