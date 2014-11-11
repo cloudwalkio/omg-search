@@ -264,7 +264,7 @@ func main() {
         return http.StatusOK, string(b)
     })
     
-    port := os.Getenv("OMG_MONITOR_PORT")
+    port := os.Getenv("OMG_SEARCH_PORT")
     if port != "" {
         fmt.Printf("[martini] Listening on port " + port + "\n")
 		err := http.ListenAndServe("0.0.0.0:"+port, m)
@@ -272,6 +272,6 @@ func main() {
             fmt.Printf("Error: %s", err)
         }
     } else {
-        fmt.Printf("Environment variable OMG_MONITOR_PORT not found \n")
+        fmt.Printf("Environment variable OMG_SEARCH_PORT not found \n")
     }
 }
