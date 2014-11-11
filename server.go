@@ -272,6 +272,6 @@ func main() {
             fmt.Printf("Error: %s", err)
         }
     } else {
-        log.Printf("Environment variable OMG_MONITOR_PORT not found \n")
+        fmt.Printf("Environment variable OMG_MONITOR_PORT not found \n")
     }
 }
