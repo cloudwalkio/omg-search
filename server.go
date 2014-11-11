@@ -11,6 +11,7 @@ import (
     "regexp"
     "encoding/json"
     "flag"
+    "os"
 )
 
 var token = flag.String("token", "", "access_token that must be validated.")
@@ -262,7 +263,15 @@ func main() {
         b,_ := json.MarshalIndent(Search{s}, "", "  ")
         return http.StatusOK, string(b)
     })
-
-    fmt.Printf("[martini] Listening on port 5000\n")
-    http.ListenAndServe("0.0.0.0:5000", m)
+    
+    port := os.Getenv("OMG_MONITOR_PORT")
+    if port != "" {
+        fmt.Printf("[martini] Listening on port " + port + "\n")
+		err := http.ListenAndServe("0.0.0.0:"+port, m)
+        if err != nil {
+            fmt.Printf("Error: %s", err)
+        }
+    } else {
+        log.Printf("Environment variable OMG_MONITOR_PORT not found \n")
+    }
 }

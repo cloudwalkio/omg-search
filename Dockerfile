@@ -19,7 +19,7 @@ RUN \
 
 WORKDIR /src/omg-search/
 
-# Save logs to LOG_DIR
-ENV LOG_DIR /var/log/docker/search
+# Save logs to LOG_DIR_SEARCH
+ENV LOG_DIR_SEARCH /var/log/docker/search
 
 ENTRYPOINT ["./startup.sh"]

@@ -27,7 +27,7 @@ The API accepts the following POST requests:
 Logs
 ----
 
-The server logs are saved to `LOG_DIR` environment variable, which defaults to `/var/log/docker/search`. To access it from the host, outise the container, we can mount a host directory to LOG_DIR when starting the container, using flag `-v`:
+The server logs are saved to `LOG_DIR_SEARCH` environment variable, which defaults to `/var/log/docker/search`. To access it from the host, outise the container, we can mount a host directory to LOG_DIR_SEARCH when starting the container, using flag `-v`:
 ```
 docker run -d -v /path/to/host/log/dir:/var/log/docker/search -p 80:5000 cloudwalk/search "my_token"
 ```
