@@ -22,4 +22,7 @@ WORKDIR /src/omg-search/
 # Save logs to LOG_DIR_SEARCH
 ENV LOG_DIR_SEARCH /var/log/docker/search
 
+# Default port to run it
+ENV OMG_SEARCH_PORT 5000
+
 ENTRYPOINT ["./startup.sh"]
