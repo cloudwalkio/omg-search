@@ -52,9 +52,9 @@ func (this *IRExtender) Visit(ctx *gocrawl.URLContext, res *http.Response, doc *
 
         url := this.Data.domain.ReplaceAllString(ctx.URL().String(), "")
 
-        // This is Cloudwalk specific: the div<class="span9"> contains the main content of each page 
+        // This is Cloudwalk specific: the div<class="span9"> contains the main content of each page
         body, err := doc.Find("div[class=\"span9\"]").Html()
-    
+
         if err != nil {
             fmt.Printf("[%s] div[class=\"span9\"] not found: %s\n", url, err)
             return nil, false
@@ -91,7 +91,7 @@ func (this *IRExtender) Filter(ctx *gocrawl.URLContext, isVisited bool) bool {
 func Crawl(crawler_data *CrawlerData) {
         // Create a new Extender with the above engine and regex
         ext := IRExtender{Data:crawler_data}
-        
+
         // Create a new Options struct with the above Extender
         opts := gocrawl.NewOptions(&ext)
         opts.CrawlDelay = 0 * time.Second
@@ -100,10 +100,10 @@ func Crawl(crawler_data *CrawlerData) {
 
         // Create a new crawler with the above Options
         c := gocrawl.NewCrawlerWithOptions(opts)
-        
+
         // Run the crawler
         c.Run(crawler_data.root_url)
-        
+
         // Vectorize the now populated engine
         crawler_data.Engine.Vectorize()
 }
@@ -113,10 +113,10 @@ func main() {
 
     m := martini.Classic()
 
-    // Our Engine uses this Regex to remove everything but: words (a-z), numbers (0-9) and 
+    // Our Engine uses this Regex to remove everything but: words (a-z), numbers (0-9) and
     // unicode portuguse signed characters, keeping intact words like "princípio", "autômato" e "criação"
     pattern_to_remove := regexp.MustCompile("[^\\w\\d\\.\\-\\xE0\\xE1\\xE2\\xE3\\xE4\\xE5\\xE6\\xE7\\xE8\\xE9\\xEA\\xEB\\xEC\\xED\\xEE\\xEF\\xF0\\xF1\\xF2\\xF3\\xF4\\xF5\\xF6\\xF7\\xF8\\xF9\\xFA\\xFB\\xFC\\xFD\\xFE\\xFF]")
-    
+
     crawler_en := CrawlerData{Engine:ir.NewEngine("en", pattern_to_remove), Title:make(map[string] string), Description:make(map[string] string), filter:regexp.MustCompile(`http(s*)://docs\.cloudwalk\.io/en(.*)`), domain:regexp.MustCompile(`.*(docs.cloudwalk.io/en)`), root_url:"https://docs.cloudwalk.io/en/introduction"}
     crawler_pt_br := CrawlerData{Engine:ir.NewEngine("pt", pattern_to_remove), Title:make(map[string] string), Description:make(map[string] string), filter:regexp.MustCompile(`http(s*)://docs\.cloudwalk\.io/pt-BR(.*)`), domain:regexp.MustCompile(`.*(docs.cloudwalk.io/pt-BR)`), root_url:"https://docs.cloudwalk.io/pt-BR/introduction"}
 
@@ -132,7 +132,7 @@ func main() {
         access_token := req.FormValue("access_token")
         if access_token != *token {
             b,_ := json.MarshalIndent(MessageReturn{"Not authorized"}, "", "  ")
-            return http.StatusUnauthorized , string(b) 
+            return http.StatusUnauthorized , string(b)
         }
 
         pattern_to_remove := regexp.MustCompile("[^\\w\\d\\.\\-\\xE0\\xE1\\xE2\\xE3\\xE4\\xE5\\xE6\\xE7\\xE8\\xE9\\xEA\\xEB\\xEC\\xED\\xEE\\xEF\\xF0\\xF1\\xF2\\xF3\\xF4\\xF5\\xF6\\xF7\\xF8\\xF9\\xFA\\xFB\\xFC\\xFD\\xFE\\xFF]")
@@ -149,7 +149,7 @@ func main() {
         crawler_pt_br = crawler_pt_br_aux
 
         b,_ := json.MarshalIndent(MessageReturn{"Crawling web pages"}, "", "  ")
-        return http.StatusOK, string(b) 
+        return http.StatusOK, string(b)
     })
 
     // Update the english engine
@@ -160,7 +160,7 @@ func main() {
         access_token := req.FormValue("access_token")
         if access_token != *token {
             b,_ := json.MarshalIndent(MessageReturn{"Not authorized"}, "", "  ")
-            return http.StatusUnauthorized , string(b) 
+            return http.StatusUnauthorized , string(b)
         }
 
         crawler_en_aux := CrawlerData{Engine:ir.NewEngine("en"), Title:make(map[string] string), Description:make(map[string] string), filter:regexp.MustCompile(`http(s*)://docs\.cloudwalk\.io/en(.*)`), domain:regexp.MustCompile(`.*(docs.cloudwalk.io/en)`), root_url:"https://docs.cloudwalk.io/en/introduction"}
@@ -168,7 +168,7 @@ func main() {
         crawler_en = crawler_en_aux
 
         b,_ := json.MarshalIndent(MessageReturn{"Crawling web pages"}, "", "  ")
-        return http.StatusOK, string(b) 
+        return http.StatusOK, string(b)
     })
 
     // Update the pt engine
@@ -179,7 +179,7 @@ func main() {
         access_token := req.FormValue("access_token")
         if access_token != *token {
             b,_ := json.MarshalIndent(MessageReturn{"Not authorized"}, "", "  ")
-            return http.StatusUnauthorized , string(b) 
+            return http.StatusUnauthorized , string(b)
         }
 
         crawler_pt_br_aux := CrawlerData{Engine:ir.NewEngine("pt"), Title:make(map[string] string), Description:make(map[string] string), filter:regexp.MustCompile(`http(s*)://docs\.cloudwalk\.io/pt-BR(.*)`), domain:regexp.MustCompile(`.*(docs.cloudwalk.io/pt-BR)`), root_url:"https://docs.cloudwalk.io/pt-BR/introduction"}
@@ -187,7 +187,7 @@ func main() {
         crawler_pt_br = crawler_pt_br_aux
 
         b,_ := json.MarshalIndent(MessageReturn{"Crawling web pages"}, "", "  ")
-        return http.StatusOK, string(b) 
+        return http.StatusOK, string(b)
     })
 
     // Return a Json of the engines
@@ -198,7 +198,7 @@ func main() {
         access_token := req.URL.Query().Get("access_token")
         if access_token != *token {
             b,_ := json.MarshalIndent(MessageReturn{"Not authorized"}, "", "  ")
-            return http.StatusUnauthorized , string(b) 
+            return http.StatusUnauthorized , string(b)
         }
 
         return http.StatusOK, "[\n" + string(crawler_pt_br.Engine.Json()) + ",\n" + string(crawler_en.Engine.Json()) + "\n]"
@@ -211,7 +211,7 @@ func main() {
         access_token := req.URL.Query().Get("access_token")
         if access_token != *token {
             b,_ := json.MarshalIndent(MessageReturn{"Not authorized"}, "", "  ")
-            return http.StatusUnauthorized , string(b) 
+            return http.StatusUnauthorized , string(b)
         }
 
         return http.StatusOK, string(crawler_pt_br.Engine.Json())
@@ -225,7 +225,7 @@ func main() {
         access_token := req.URL.Query().Get("access_token")
         if access_token != *token {
             b,_ := json.MarshalIndent(MessageReturn{"Not authorized"}, "", "  ")
-            return http.StatusUnauthorized , string(b) 
+            return http.StatusUnauthorized , string(b)
         }
 
         return http.StatusOK, string(crawler_en.Engine.Json())
@@ -235,9 +235,9 @@ func main() {
     m.Get("/:search", func(params martini.Params, w http.ResponseWriter, req *http.Request) (int, string)  {
         w.Header().Set("Content-Type", "application/json")
         w.Header().Set("Access-Control-Allow-Origin", "*")
-        
+
         s := make([]SearchResult, 0)
-        
+
         // Parse the url to get the query paramenter named "query" and convert to int
         query := req.URL.Query().Get("query")
 
@@ -246,7 +246,7 @@ func main() {
 
         if access_token != *token {
             b,_ := json.MarshalIndent(MessageReturn{"Not authorized"}, "", "  ")
-            return http.StatusUnauthorized , string(b) 
+            return http.StatusUnauthorized , string(b)
         }
 
         if params["search"] == "en" {
@@ -258,16 +258,16 @@ func main() {
                 for _, v := range crawler_pt_br.Engine.Query(query) {
                    s = append(s, SearchResult{Url:v.Id, Title:crawler_pt_br.Title[v.Id], Description:crawler_pt_br.Description[v.Id]})
                 }
-            } 
+            }
         }
         b,_ := json.MarshalIndent(Search{s}, "", "  ")
         return http.StatusOK, string(b)
     })
-    
+
     port := os.Getenv("OMG_SEARCH_PORT")
     if port != "" {
         fmt.Printf("[martini] Listening on port " + port + "\n")
-		err := http.ListenAndServe("0.0.0.0:"+port, m)
+		err := http.ListenAndServe("0.0.0.0:" + port, m)
         if err != nil {
             fmt.Printf("Error: %s", err)
         }
