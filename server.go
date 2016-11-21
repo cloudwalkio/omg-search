@@ -240,7 +240,7 @@ func main() {
         w.Header().Set("Content-Type", "application/json")
         w.Header().Set("Access-Control-Allow-Origin", "*")
 
-        var s []SearchResult
+        s := make([]SearchResult, 0)
 
         // Parse the url to get the query paramenter named "query" and convert to int
         query := req.URL.Query().Get("query")
