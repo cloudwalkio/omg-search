@@ -1,6 +1,8 @@
-FROM luisbebop/go1.2
+FROM blang/golang-alpine
 
 MAINTAINER Allan Costa "allan@cloudwalk.io"
+
+RUN apk add bash
 
 RUN \
     go get github.com/codegangsta/martini;\
