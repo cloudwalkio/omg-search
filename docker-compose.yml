@@ -1,0 +1,10 @@
+web:
+  command: ./startup.sh $$ACCESS_TOKEN
+  labels:
+    - convox.port.443.protocol=https
+    - convox.port.8443.protocol=https
+  ports:
+    - 443:5000
+    - 80:5000
+  environment:
+    - ACCESS_TOKEN
