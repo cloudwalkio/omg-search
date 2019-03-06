@@ -1,0 +1,5 @@
+runtime: go111
+service: omg-search
+
+env_variables:
+  TOKEN: "TOKEN-GOES-HERE"
