@@ -29,7 +29,7 @@ This service is configured to run on GAE, hence the `app.yaml` file.
 To deploy a new version:
 
 ```
-gcloud app deploy
+gcloud app deploy --project GCP-PROJECT
 ```
 
 The deploy will happen based on the configuration information inside `app.yaml` and your current `gcloud` settings. **Make sure everything is correct** .
